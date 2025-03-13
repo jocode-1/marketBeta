@@ -12,7 +12,7 @@ import (
 
 var DB *sqlx.DB
 
-func ConnectDB() {
+func ConnectDB() *sqlx.DB {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -39,6 +39,7 @@ func ConnectDB() {
 
 	DB = db
 
+	return db
 }
 
 //RunMigrations executes SQL files for setup

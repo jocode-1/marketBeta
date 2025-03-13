@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	v "github.com/go-ozzo/ozzo-validation/v4"
@@ -8,13 +9,28 @@ import (
 	"github.com/google/uuid"
 	"github.com/jocode-1/marketBeta/config"
 	"github.com/jocode-1/marketBeta/internal/models"
+	"github.com/jocode-1/marketBeta/internal/repositories"
 	"github.com/jocode-1/marketBeta/internal/utils"
 	"github.com/jocode-1/marketBeta/queries"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"time"
 )
+
+type UserHandler struct {
+	repo   repositories.UserRepository
+	logger *logrus.Logger
+}
+
+// NewUserHandler creates a new UserHandler with its dependencies injected.
+func NewUserHandler(repo repositories.UserRepository, logger *logrus.Logger) *UserHandler {
+	return &UserHandler{
+		repo:   repo,
+		logger: logger,
+	}
+}
 
 // SignupUserParam defines the expected input for user registration
 type SignupUserParam struct {
@@ -39,16 +55,18 @@ func (s SignupUserParam) validate() error {
 }
 
 // Register a new user
-func Register(c *gin.Context) {
+func (h *UserHandler) Register(c *gin.Context) {
 	var signupParam SignupUserParam
 
 	if err := c.ShouldBindJSON(&signupParam); err != nil {
+		h.logger.Error("Invalid request payload")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
 
 	// Validate fields
 	if err := signupParam.validate(); err != nil {
+		h.logger.Error("User Validation failed: ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -56,6 +74,7 @@ func Register(c *gin.Context) {
 	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signupParam.Password), bcrypt.DefaultCost)
 	if err != nil {
+		h.logger.Error("Hashing password failed: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
 		return
 	}
@@ -75,20 +94,21 @@ func Register(c *gin.Context) {
 		UpdatedAt:      time.Now(),
 	}
 
-	_, err = config.DB.NamedExec(`INSERT INTO users (user_id, username, email, hashed_password, phone_number, user_address, ip_address, created_at, updated_at) VALUES (
-		:user_id, :username, :email, :hashed_password, :phone_number, :user_address, :ip_address, :created_at, :updated_at)`, &user)
-	if err != nil {
-		log.Println("Database error:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User already exists"})
+	if err = h.repo.CreateUser(context.Background(), &user); err != nil {
+		h.logger.Error("Failed to create user: ", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "User already exists or creation failed"})
 		return
 	}
 
 	// Return response
+	h.logger.Info("User registered successfully: ", user.UserEmail)
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "User registered successfully",
 		"user":    user,
 	})
 }
+
+// Login authenticates user
 
 type LoginUserParam struct {
 	Email    string `json:"email"`
@@ -102,7 +122,6 @@ func (u LoginUserParam) validate() error {
 	)
 }
 
-// Login authenticates user and generates JWT token
 func Login(c *gin.Context) {
 	var input LoginUserParam
 
@@ -145,9 +164,7 @@ func Login(c *gin.Context) {
 
 	// Return success response
 	c.JSON(http.StatusOK, gin.H{
-		"message":       "Login successful",
-		"access_token":  accessToken,
-		"refresh_token": refreshToken,
+		"message": "Login successful",
 		"user": gin.H{
 			"user_id":   user.UserID,
 			"username":  user.UserName,
@@ -156,6 +173,8 @@ func Login(c *gin.Context) {
 			"is_vendor": user.IsVendor,
 			"role":      user.Role,
 		},
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
 	})
 }
 
