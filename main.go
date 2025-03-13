@@ -23,7 +23,10 @@ func SetupRouter() *gin.Engine {
 // StartServer starts the HTTP server
 func StartServer() {
 	router := SetupRouter()
-	router.Run(":8080") // Start server on port 8080
+	err := router.Run(":8080")
+	if err != nil {
+		return
+	} // Start server on port 8080
 }
 
 func main() {

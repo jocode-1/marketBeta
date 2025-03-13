@@ -11,7 +11,7 @@ func SetupRoutes(router *gin.Engine) {
 	api := router.Group("/api")
 	{
 		api.POST("/register", handlers.Register)
-		//api.POST("/login", controllers.Login)
+		api.POST("/login", handlers.Login)
 		//api.GET("/refresh-token", controllers.RefreshToken)
 	}
 
