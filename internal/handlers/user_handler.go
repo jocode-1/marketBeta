@@ -7,14 +7,11 @@ import (
 	v "github.com/go-ozzo/ozzo-validation/v4"
 	is "github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/google/uuid"
-	"github.com/jocode-1/marketBeta/config"
 	"github.com/jocode-1/marketBeta/internal/models"
 	"github.com/jocode-1/marketBeta/internal/repositories"
 	"github.com/jocode-1/marketBeta/internal/utils"
-	"github.com/jocode-1/marketBeta/queries"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 	"net/http"
 	"time"
 )
@@ -122,7 +119,7 @@ func (u LoginUserParam) validate() error {
 	)
 }
 
-func Login(c *gin.Context) {
+func (h *UserHandler) Login(c *gin.Context) {
 	var input LoginUserParam
 
 	// Bind and validate input
@@ -135,17 +132,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Define user model to hold fetched data
-	var user models.UserModel
-
-	// Fetch user from database using sqlx
-	err := config.DB.Get(&user, queries.GetUserByEmail, input.Email)
-	if err == sql.ErrNoRows {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
-		return
-	} else if err != nil {
-		log.Println("Database error:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+	user, err := h.repo.GetUserByEmail(context.Background(), input.Email)
+	if err != nil {
+		h.logger.Warn("User not found with email: ", input.Email)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}
 
