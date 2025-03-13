@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jocode-1/marketBeta/config"
 	"github.com/jocode-1/marketBeta/internal/bootstrap"
-	"github.com/jocode-1/marketBeta/internal/handlers"
 	"github.com/jocode-1/marketBeta/internal/middleware"
 )
 
@@ -14,7 +13,7 @@ func SetupRoutes(router *gin.Engine, deps *bootstrap.AppDependencies) {
 	api := router.Group("/api")
 	{
 		api.POST("/register", deps.UserHandler.Register)
-		api.POST("/login", handlers.Login)
+		api.POST("/login", deps.UserHandler.Login)
 		//api.GET("/refresh-token", controllers.RefreshToken)
 	}
 

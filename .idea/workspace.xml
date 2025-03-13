@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75ef96d9-c450-4a39-99a6-0a3319ed68d5" name="Changes" comment="authentication done refactoring remaining">
-      <change afterPath="$PROJECT_DIR$/config/logger.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/monitoring.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/bootstrap/dependencies.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/repositories/user_repositories.go" afterDir="false" />
+    <list default="true" id="75ef96d9-c450-4a39-99a6-0a3319ed68d5" name="Changes" comment="implmented middlewares and refactored main.go">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handlers/user_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handlers/user_handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/routes.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +102,7 @@
       <updated>1741690996864</updated>
       <workItem from="1741690998103" duration="6000" />
       <workItem from="1741803030230" duration="1201000" />
-      <workItem from="1741823814235" duration="14345000" />
+      <workItem from="1741823814235" duration="17280000" />
     </task>
     <task id="LOCAL-00001" summary="authentication done refactoring remaining">
       <option name="closed" value="true" />
@@ -120,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741833340299</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="implmented middlewares and refactored main.go">
+      <option name="closed" value="true" />
+      <created>1741880435612</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1741880435612</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,7 +166,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="authentication done refactoring remaining" />
-    <option name="LAST_COMMIT_MESSAGE" value="authentication done refactoring remaining" />
+    <MESSAGE value="implmented middlewares and refactored main.go" />
+    <option name="LAST_COMMIT_MESSAGE" value="implmented middlewares and refactored main.go" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
