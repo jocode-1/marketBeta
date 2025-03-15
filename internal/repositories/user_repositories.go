@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *models.UserModel) error
 	GetUserByEmail(ctx context.Context, email string) (*models.UserModel, error)
+	GetUserById(ctx context.Context, userID string) (*models.UserModel, error)
 }
 
 type userRepository struct {
@@ -63,5 +64,13 @@ func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*mod
 	query := `SELECT user_id, username, email, hashed_password, phone_number, user_address, profile_photo_url, 
        ip_address, is_verified, is_admin, is_vendor, role, status, updated_at, created_at FROM users WHERE email = $1 LIMIT 1`
 	err := r.db.GetContext(ctx, &user, query, email)
+	return &user, err
+}
+
+func (r *userRepository) GetUserById(ctx context.Context, userId string) (*models.UserModel, error) {
+	var user models.UserModel
+	query := `SELECT user_id, username, email, hashed_password, phone_number, user_address, profile_photo_url, 
+       ip_address, is_verified, is_admin, is_vendor, role, status, updated_at, created_at FROM users WHERE user_id = $1 LIMIT 1`
+	err := r.db.GetContext(ctx, &user, query, userId)
 	return &user, err
 }

@@ -35,7 +35,7 @@ type UserModel struct {
 	PhoneNumber     string         `db:"phone_number" json:"phone_number"`
 	UserAddress     string         `db:"user_address" json:"address"`
 	ProfilePhotoUrl sql.NullString `db:"profile_photo_url" json:"profile_photo_url"`
-	IpAddress       sql.NullString `db:"ip_address" json:"ip_address"`
+	IpAddress       string         `db:"ip_address" json:"ip_address"`
 	IsVerified      bool           `db:"is_verified" json:"is_verified"`
 	IsAdmin         bool           `db:"is_admin" json:"is_admin"`
 	IsVendor        bool           `db:"is_vendor" json:"is_vendor"`

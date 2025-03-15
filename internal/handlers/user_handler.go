@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"database/sql"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	v "github.com/go-ozzo/ozzo-validation/v4"
 	is "github.com/go-ozzo/ozzo-validation/v4/is"
@@ -13,6 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -86,7 +87,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 		HashedPassword: string(hashedPassword),
 		UserAddress:    signupParam.UserAddress,
 		PhoneNumber:    signupParam.PhoneNumber,
-		IpAddress:      sql.NullString{String: userIP, Valid: userIP != ""},
+		IpAddress:      userIP,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
@@ -166,6 +167,46 @@ func (h *UserHandler) Login(c *gin.Context) {
 		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
+}
+
+func (h *UserHandler) GetUserByID(c *gin.Context) {
+	userID := c.Param("user_id")
+
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID is required"})
+		return
+	}
+
+	// Trim and Validate UUID format
+	trimmedUserID := strings.TrimSpace(userID)
+	if _, err := uuid.Parse(trimmedUserID); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+	// Fetch user from the repository
+	userFound, err := h.repo.GetUserById(context.Background(), userID)
+	if err != nil {
+		h.logger.Warn("User not found with ID:", userFound)
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	// Convert user struct to JSON response dynamically
+	userData, err := json.Marshal(userFound)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process user data"})
+		return
+	}
+
+	// Convert JSON back to map for a dynamic response
+	var userMap map[string]interface{}
+	if err := json.Unmarshal(userData, &userMap); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to format user data"})
+		return
+	}
+
+	// Return user details automatically
+	c.JSON(http.StatusOK, userMap)
 }
 
 // RefreshToken handles token renewal using the refresh token

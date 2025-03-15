@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75ef96d9-c450-4a39-99a6-0a3319ed68d5" name="Changes" comment="implmented middlewares and refactored main.go">
+    <list default="true" id="75ef96d9-c450-4a39-99a6-0a3319ed68d5" name="Changes" comment="implemented middlewares and logging and monitoring">
+      <change afterPath="$PROJECT_DIR$/test/unit/user_repository_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handlers/user_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handlers/user_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/models/user_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/models/user_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/repositories/user_repositories.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/repositories/user_repositories.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/routes.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,6 +43,16 @@
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/jocode-1/marketBeta.git&quot;,
     &quot;accountId&quot;: &quot;b150a7b4-99d8-431e-89a6-128534c0016b&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;jocode-1&quot;,
+    &quot;repository&quot;: &quot;marketBeta&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -48,27 +66,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.go build github.com/jocode-1/marketBeta.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/akint/IdeaProjects/marketBeta",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/akint/IdeaProjects/marketBeta/main.go",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.go build github.com/jocode-1/marketBeta.executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.TestGetUserById in github.com/jocode-1/marketBeta/test/unit (1).executor&quot;: &quot;Run&quot;,
+    &quot;Go Test.TestGetUserById in github.com/jocode-1/marketBeta/test/unit.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/akint/IdeaProjects/marketBeta&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/akint/IdeaProjects/marketBeta/main.go&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Go Build.go build github.com/jocode-1/marketBeta">
     <configuration name="go build github.com/jocode-1/marketBeta" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="marketBeta" />
       <working_directory value="$PROJECT_DIR$" />
@@ -78,9 +98,35 @@
       <filePath value="$PROJECT_DIR$/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="TestGetUserById in github.com/jocode-1/marketBeta/test/unit (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="marketBeta" />
+      <working_directory value="$PROJECT_DIR$/test/unit" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/jocode-1/marketBeta/test/unit" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetUserById\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestGetUserById in github.com/jocode-1/marketBeta/test/unit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="marketBeta" />
+      <working_directory value="$PROJECT_DIR$/test/unit" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/jocode-1/marketBeta/test/unit" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetUserById\E$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build github.com/jocode-1/marketBeta" />
+        <item itemvalue="Go Test.TestGetUserById in github.com/jocode-1/marketBeta/test/unit (1)" />
+        <item itemvalue="Go Test.TestGetUserById in github.com/jocode-1/marketBeta/test/unit" />
       </list>
     </recent_temporary>
   </component>
@@ -102,7 +148,8 @@
       <updated>1741690996864</updated>
       <workItem from="1741690998103" duration="6000" />
       <workItem from="1741803030230" duration="1201000" />
-      <workItem from="1741823814235" duration="17280000" />
+      <workItem from="1741823814235" duration="21028000" />
+      <workItem from="1741946492590" duration="8214000" />
     </task>
     <task id="LOCAL-00001" summary="authentication done refactoring remaining">
       <option name="closed" value="true" />
@@ -120,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741880435612</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="implemented middlewares and logging and monitoring">
+      <option name="closed" value="true" />
+      <created>1741886968296</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741886968296</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,7 +222,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="authentication done refactoring remaining" />
     <MESSAGE value="implmented middlewares and refactored main.go" />
-    <option name="LAST_COMMIT_MESSAGE" value="implmented middlewares and refactored main.go" />
+    <MESSAGE value="implemented middlewares and logging and monitoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented middlewares and logging and monitoring" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

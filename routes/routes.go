@@ -14,13 +14,11 @@ func SetupRoutes(router *gin.Engine, deps *bootstrap.AppDependencies) {
 	{
 		api.POST("/register", deps.UserHandler.Register)
 		api.POST("/login", deps.UserHandler.Login)
-		//api.GET("/refresh-token", controllers.RefreshToken)
 	}
 
-	protected := router.Group("/api/protected").Use(middleware.AuthMiddleware())
+	protected := router.Group("/api/users").Use(middleware.AuthMiddleware())
 	{
-		protected.GET("/dashboard", func(c *gin.Context) {
-			c.JSON(200, gin.H{"message": "Welcome to your dashboard"})
-		})
+		protected.GET("/user/:user_id", deps.UserHandler.GetUserByID)
+
 	}
 }
