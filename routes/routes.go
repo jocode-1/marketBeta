@@ -21,4 +21,10 @@ func SetupRoutes(router *gin.Engine, deps *bootstrap.AppDependencies) {
 		protected.GET("/user/:user_id", deps.UserHandler.GetUserByID)
 
 	}
+
+	vendors := router.Group("/api/vendors").Use(middleware.AuthMiddleware())
+	{
+		vendors.POST("/createVendor", deps.VendorHandler.CreateVendor)
+
+	}
 }

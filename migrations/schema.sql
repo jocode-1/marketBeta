@@ -22,21 +22,37 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Vendor Profiles Table
 CREATE TABLE IF NOT EXISTS vendor_profiles (
-                                               id UUID PRIMARY KEY,
-                                               user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
-    business_id UUID DEFAULT gen_random_uuid() UNIQUE,
+                                               id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    business_id UUID UNIQUE DEFAULT uuid_generate_v4(),
     business_name VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     address TEXT NOT NULL,
     website VARCHAR(255),
-    tax_id VARCHAR(100),
+    cac_number VARCHAR(100),
     payment_made BOOLEAN DEFAULT FALSE,
-    verified BOOLEAN DEFAULT FALSE,
+    is_verified BOOLEAN DEFAULT FALSE,
+    is_business_verified BOOLEAN DEFAULT FALSE,
+    verification_status VARCHAR(50) DEFAULT 'pending', -- New: 'pending', 'approved', 'rejected'
+    rejected_reasons TEXT DEFAULT NULL,                -- New: Reason for rejection
+    total_sales DECIMAL(12, 2) DEFAULT 0.00,          -- New: Track vendor's total sales
+    rating DECIMAL(3,2) DEFAULT 0.00,                 -- New: Vendor rating (1-5 stars)
+    review_count INT DEFAULT 0,                      -- New: Number of reviews received
+    status VARCHAR(50) DEFAULT 'active',              -- New: 'active', 'suspended', 'deactivated'
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
     );
 
+-- Ensure updated_at column updates automatically on record changes
+CREATE OR REPLACE FUNCTION update_timestamp_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+-- Trigger for users table
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_update_users') THEN
@@ -47,6 +63,7 @@ CREATE TRIGGER trigger_update_users
 END IF;
 END $$;
 
+-- Trigger for vendor_profiles table
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_update_vendor_profiles') THEN
@@ -56,4 +73,3 @@ CREATE TRIGGER trigger_update_vendor_profiles
     EXECUTE FUNCTION update_timestamp_column();
 END IF;
 END $$;
-
